@@ -17,5 +17,6 @@ This is an RA Project focused on exploring data analysis in R. We are using the 
 
 *July 23, 2020* - Walkthrough of the R [script](https://github.com/lrhasak/K2-Project) used for T1 behavioral data analysis, which was focused on presenting visualizations to Synapse.
 
-*July 31, 2020* - Basics of manipulating tidy data in R. Create new T2 script and begin loading and cleaning the data. 
+*July 31, 2020* - Basics of manipulating tidy data in R. Created new T2 script and began loading and cleaning the data. 
 
+*August 6, 2020* - *Upcoming meeting*
