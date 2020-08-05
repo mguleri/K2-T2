@@ -1,0 +1,116 @@
+---
+title: "K-2 T2 Behavioral"
+author: "Cha Cha Pillai, Mira Guleri, Angie Wang"
+date: "7/31/2020"
+output: pdf_document
+---
+
+Text in these white spaces will appear in your markdown doc as text.
+<!--But this text won't appear!-->
+
+# This creates a heading
+## This is a smaller heading
+###### An even smaller heading
+
+Click the Knit button to render the file and see what the text looks like.
+
+```{r set up, include=FALSE}
+# This is our first code chunk. In the curly braces / chunk header above, 
+# 'r' (which is automatically inserted) tells us that this is an R code chunk. 
+# We then named this chunk 'set up,' and specified that the contents of the chunk 
+# shouldn't appear in the rendered file with the 'include = FALSE' argument.
+
+# First, we load the packages that we'll be using. The packages have to 
+# be installed before you load them, which you can do using install.packages().
+
+library(Hmisc)      # for correlation matrix
+library(psych)      # for descriptive statistics
+library(knitr)      # for knitting to pdf
+library(kableExtra) # for making pretty tables
+library(ggpubr)     # for arranging plots
+library(corrplot)   # for making correlogram
+library(forcats)    # for reordering factor levels
+library(tidyverse)  # for data wrangling
+
+# You'll also want to check what your working directory is, so R knows where 
+# to look for files. Try getwd() and setwd(). Alternatively, you can go to the
+# top menu bar on your computer > Session > Set Working Directory > Choose Directory.
+
+```
+
+
+```{r clean data, include=FALSE}
+
+# Next, we read in the .csv file. We included additional arguments in read_csv():
+# (1) Set col_names as TRUE so the first row of the input will be used as the 
+# column names, and will not be included in the data frame. (2) Specify that the 
+# string "N/A" in the data should be interpreted as a missing value.
+
+# read in T2 data
+b2_data <- read_csv("K2_T2_BehavioralData_20200728.csv", 
+                    col_names =  TRUE, 
+                    na = "N/A")
+
+# look at each column's class
+#sapply(b2_data, class)
+
+# you can do something like this to change the class of a specific column
+#b2_data$k2_t2_b_grade_year <- as.factor(b2_data$k2_t2_b_grade_year)
+
+# view your data frame
+#View(b2_data)
+
+# After checking that the data looks normal, we use pipes (%>%) for a series 
+# of actions on our original data frame, b2_data. The cleaned result is 
+# assigned to a new variable, b2_clean.
+
+# look at existing column names
+#colnames(b2_data)
+
+# clean the data
+b2_clean <- b2_data %>% 
+ 
+  # rename columns (new_name = old_name)
+  rename(id = participant_id, 
+         age_year = k2_t2_b_age_years,
+         grade = k2_t2_b_grade_year,
+         ctopp_l_raw = k2_t2_b_lttr_raw) %>% 
+  
+  # select columns we want
+  select (id, 
+          age_year, 
+          grade, 
+          ctopp_l_raw) %>% 
+  
+  # reorder grade variable to show in this order for plotting
+  mutate(grade = fct_relevel(grade,
+                             "K", "1", "2"))
+
+# TO-DO: [Cha Cha] Continue to rename and select relevant columns in the code 
+# above. Let's stick with these variables for now:
+    # participant_id
+    # k2_t2_b_age_years
+    # k2_t2_b_age_months
+    # k2_t2_b_age_days
+    # k2_t2_b_grade_year
+    # k2_t2_b_color_raw
+    # k2_t2_b_lttr_raw
+    # k2_t2_b_elision_raw
+    # k2_t2_b_swe_raw_fin
+    # k2_t2_b_pde_raw_fin
+    # k2_t2_b_swe_agescal
+    # k2_t2_b_pde_agescal
+    # k2_t2_b_swe_grdscal
+    # k2_t2_b_pde_grdscal
+    # k2_t2_b_wj_corr_nb
+
+# Extra exercise: Try to create another data frame with just the participant id, age, 
+# grade, and CTOPP Elision data. Try reordering the columns, like putting grade ahead
+# of everything else.
+
+
+# TO-DO: [During next meeting] Go over mutate and use it to make a new age variable
+
+
+```
+
