@@ -40,24 +40,23 @@ library(tidyverse)  # for data wrangling
 
 
 ```{r clean data, include=FALSE}
-
 # Next, we read in the .csv file. We included additional arguments in read_csv():
 # (1) Set col_names as TRUE so the first row of the input will be used as the 
 # column names, and will not be included in the data frame. (2) Specify that the 
 # string "N/A" in the data should be interpreted as a missing value.
 
 # read in T2 data
-b2_data <- read_csv ("K2_T2_BehavioralData_20200728.csv") 
-                    col_names =  TRUE 
-                    na = "N/A"
+b2_data <- read_csv("K2_T2_BehavioralData_20200728.csv", 
+                    col_names = TRUE, 
+                    na = "N/A")
 
-# look at each column's class
+# look at the class of every column in the dataframe
 #sapply(b2_data, class)
 
 # you can do something like this to change the class of a specific column
 #b2_data$k2_t2_b_grade_year <- as.factor(b2_data$k2_t2_b_grade_year)
 
-# view your data frame
+# view your dataframe
 #View(b2_data)
 
 # After checking that the data looks normal, we use pipes (%>%) for a series 
@@ -69,9 +68,8 @@ b2_data <- read_csv ("K2_T2_BehavioralData_20200728.csv")
 
 # clean the data
 b2_clean <- b2_data %>% 
- 
   # rename columns (new_name = old_name)
-  rename(id = participant_id, 
+  rename(pid = participant_id, 
          age_year = k2_t2_b_age_years,
          age_months = k2_t2_b_age_months,
          age_days = k2_t2_b_age_days,
@@ -86,60 +84,43 @@ b2_clean <- b2_data %>%
          swe_grade = k2_t2_b_swe_grdscal,
          pde_grade = k2_t2_b_pde_grdscal,
          wj_corr = k2_t2_b_wj_corr_nb) %>% 
-  
   # select columns we want
-  select (id, 
-          age_year,
-          age_months,
-          age_days,
-          grade,
-          ctopp_c_raw,
-          ctopp_l_raw,
-          elision_raw,
-          swe_raw,
-          pde_raw,
-          swe_age,
-          pde_age,
-          swe_grade,
-          pde_grade,
-          wj_corr) %>% 
-  
-b2_elision <- b2_clean %>%
-  select(grade,
-         elision_raw,
-         age_year,
-         id)
-
-
+  select (pid, age_year, age_months, age_days, grade,
+          ctopp_c_raw, ctopp_l_raw, elision_raw,
+          swe_raw, pde_raw, swe_age, pde_age,
+          swe_grade, pde_grade, wj_corr) %>% 
+  # create new column for age as a decimal value
+  mutate(age = (age_year + (age_months/12) + (age_days/365))) %>% 
   # reorder grade variable to show in this order for plotting
-  mutate(grade = fct_relevel(grade,
-                             "K", "1", "2"))
-
-# TO-DO: [Cha Cha] Continue to rename and select relevant columns in the code 
-# above. Let's stick with these variables for now:
-    # participant_id
-    # k2_t2_b_age_years
-    # k2_t2_b_age_months
-    # k2_t2_b_age_days
-    # k2_t2_b_grade_year
-    # k2_t2_b_color_raw
-    # k2_t2_b_lttr_raw
-    # k2_t2_b_elision_raw
-    # k2_t2_b_swe_raw_fin
-    # k2_t2_b_pde_raw_fin
-    # k2_t2_b_swe_agescal
-    # k2_t2_b_pde_agescal
-    # k2_t2_b_swe_grdscal
-    # k2_t2_b_pde_grdscal
-    # k2_t2_b_wj_corr_nb
-
-# Extra exercise: Try to create another data frame with just the participant id, age, 
-# grade, and CTOPP Elision data. Try reordering the columns, like putting grade ahead
-# of everything else.
+  mutate(grade = fct_relevel(grade,"K", "1", "2")) %>% 
+  # de-select columns that we don't need anymore
+  select(-age_months, -age_days) %>% 
+  # reorder columns
+  select(pid, grade, age, age_year, everything())
 
 
-# TO-DO: [During next meeting] Go over mutate and use it to make a new age variable
+```
 
+# Extra Practice
+
+1. Create another data frame with just the participant id, age, grade, and CTOPP Elision data. Try reordering the columns, like putting grade ahead of everything else.
+
+2. Create a data frame with just 1st and 2nd grade TOWRE data. (Hint: Use filter() and logical operators)
+
+```{r extra practice, include=FALSE}
+# This is a code chunk for extra practice solutions.
+
+# 1.
+b2_elision <- b2_clean %>%
+  select(grade, elision_raw, age_year, id)
+
+# 2.
+
+
+
+
+
+# 3.
 
 ```
 
