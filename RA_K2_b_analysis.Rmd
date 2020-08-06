@@ -1,5 +1,5 @@
 ---
-title: "K-2 T2 Behavioral"
+title: "K2_b_analysis_RA"
 author: "Cha Cha Pillai, Mira Guleri, Angie Wang"
 date: "7/31/2020"
 output: pdf_document
@@ -12,11 +12,11 @@ Text in these white spaces will appear in your markdown doc as text.
 ## This is a smaller heading
 ###### An even smaller heading
 
-Click the Knit button to render the file and see what the text looks like.
+Click the Knit button to render the file and see what the text looks like.        
 
 ```{r set up, include=FALSE}
 # This is our first code chunk. In the curly braces / chunk header above, 
-# 'r' (which is automatically inserted) tells us that this is an R code chunk. 
+# 'r' (which is automatically inserted) tells us that this is an R code chunk.
 # We then named this chunk 'set up,' and specified that the contents of the chunk 
 # shouldn't appear in the rendered file with the 'include = FALSE' argument.
 
@@ -47,9 +47,9 @@ library(tidyverse)  # for data wrangling
 # string "N/A" in the data should be interpreted as a missing value.
 
 # read in T2 data
-b2_data <- read_csv("K2_T2_BehavioralData_20200728.csv", 
-                    col_names =  TRUE, 
-                    na = "N/A")
+b2_data <- read_csv ("K2_T2_BehavioralData_20200728.csv") 
+                    col_names =  TRUE 
+                    na = "N/A"
 
 # look at each column's class
 #sapply(b2_data, class)
@@ -73,15 +73,44 @@ b2_clean <- b2_data %>%
   # rename columns (new_name = old_name)
   rename(id = participant_id, 
          age_year = k2_t2_b_age_years,
+         age_months = k2_t2_b_age_months,
+         age_days = k2_t2_b_age_days,
          grade = k2_t2_b_grade_year,
-         ctopp_l_raw = k2_t2_b_lttr_raw) %>% 
+         ctopp_c_raw = k2_t2_b_color_raw,
+         ctopp_l_raw = k2_t2_b_lttr_raw,
+         elision_raw = k2_t2_b_elision_raw,
+         swe_raw = k2_t2_b_swe_raw_fin,
+         pde_raw = k2_t2_b_pde_raw_fin,
+         swe_age = k2_t2_b_swe_agescal,
+         pde_age = k2_t2_b_pde_agescal,
+         swe_grade = k2_t2_b_swe_grdscal,
+         pde_grade = k2_t2_b_pde_grdscal,
+         wj_corr = k2_t2_b_wj_corr_nb) %>% 
   
   # select columns we want
   select (id, 
-          age_year, 
-          grade, 
-          ctopp_l_raw) %>% 
+          age_year,
+          age_months,
+          age_days,
+          grade,
+          ctopp_c_raw,
+          ctopp_l_raw,
+          elision_raw,
+          swe_raw,
+          pde_raw,
+          swe_age,
+          pde_age,
+          swe_grade,
+          pde_grade,
+          wj_corr) %>% 
   
+b2_elision <- b2_clean %>%
+  select(grade,
+         elision_raw,
+         age_year,
+         id)
+
+
   # reorder grade variable to show in this order for plotting
   mutate(grade = fct_relevel(grade,
                              "K", "1", "2"))
