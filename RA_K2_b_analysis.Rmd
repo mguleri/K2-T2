@@ -25,6 +25,7 @@ Click the Knit button to render the file and see what the text looks like.
 
 library(Hmisc)      # for correlation matrix
 library(psych)      # for descriptive statistics
+library(pastecs)    # for descriptive statistics
 library(knitr)      # for knitting to pdf
 library(kableExtra) # for making pretty tables
 library(ggpubr)     # for arranging plots
@@ -83,12 +84,12 @@ b2_clean <- b2_data %>%
          pde_age = k2_t2_b_pde_agescal,
          swe_grade = k2_t2_b_swe_grdscal,
          pde_grade = k2_t2_b_pde_grdscal,
-         wj_corr = k2_t2_b_wj_corr_nb) %>% 
+         wj_raw = k2_t2_b_wj_corr_nb) %>% 
   # select columns we want
   select (pid, age_year, age_months, age_days, grade,
           ctopp_c_raw, ctopp_l_raw, elision_raw,
           swe_raw, pde_raw, swe_age, pde_age,
-          swe_grade, pde_grade, wj_corr) %>% 
+          swe_grade, pde_grade, wj_raw) %>% 
   # create new column for age as a decimal value
   mutate(age = (age_year + (age_months/12) + (age_days/365))) %>% 
   # reorder grade variable to show in this order for plotting
@@ -98,29 +99,83 @@ b2_clean <- b2_data %>%
   # reorder columns
   select(pid, grade, age, age_year, everything())
 
+```
+
+\newpage <!--putting this on a new page in the rendered file-->
+# Extra Practice: Manipulating dataframes with dplyr verbs 
+Here's a useful dplyr cheatsheet: https://github.com/rstudio/cheatsheets/blob/master/data-transformation.pdf
+
+1\. Create a new data frame with just the participant id, age, grade, and CTOPP Elision data. Try reordering the columns, like putting grade ahead of everything else.
+
+```{r dplyr extra practice #1}
+# 1. Solution
+
+b2_elision <- b2_clean %>%
+  select(grade, elision_raw, age_year, pid)
 
 ```
 
-# Extra Practice
+2a\. Create a new data frame with just 2nd grade W-J data. (Hint: Use filter()). You should end up with 19 subjects.
 
-1. Create another data frame with just the participant id, age, grade, and CTOPP Elision data. Try reordering the columns, like putting grade ahead of everything else.
+2b\. Still working with the same data frame in 2a (Hint: Use piping!), pick out subjects who scored 60 or above. You should end up with 8 subjects.
 
-2. Create a data frame with just 1st and 2nd grade TOWRE data. (Hint: Use filter() and logical operators)
-
-```{r extra practice, include=FALSE}
-# This is a code chunk for extra practice solutions.
-
-# 1.
-b2_elision <- b2_clean %>%
-  select(grade, elision_raw, age_year, id)
-
-# 2.
+```{r dplyr extra practice #2}
+# 2a. Solution
 
 
 
+# 2b. Solution
 
 
-# 3.
+
+```
+
+3\. Create a new dataframe with 1st and 2nd grade data. (Hint: Use logical operators to get both grade levels)
+
+```{r dplyr extra practice #3}
+# 3. Solution
+
+
+```
+
+4a\. The arrange() function orders rows by values of a column or columns (low to high). Create a new dataframe where you arrange the b2_clean data by age (low to high)
+
+4b\. Use drop_na() to drop rows (subjects) that have any NA values in their scores.
+
+```{r dplyr extra practice #4}
+# 4a. Solution
+
+
+# 4b. Solution
+
+
+```
+
+\newpage 
+# Descriptive Statistics 
+```{r descriptive stats, echo=FALSE}
+
+# descriptive stats
+b2_clean_descr <- b2_clean %>%
+  select(- pid, - grade, - age_year) %>% # remove unnecessary columns
+  stat.desc() # using stat.desc() from pastecs package
+
+# put the desc stats in a nice table in our rendered file
+kable(b2_clean_descr, 
+      digits = 3, # round to 3 digits
+      format = "latex", 
+      caption = "K-2 T2 Descriptive Statistics",
+      booktabs = TRUE) %>%
+  # more formatting, from the kableExtra package
+  kable_styling(latex_options = c("striped", "scale_down", "hold_position")) 
+
+```
+
+\newpage
+# Visualizations
+```{r ctopp plots, echo=FALSE}
+
+#TO-DO: Angie make structure for plots
 
 ```
 
