@@ -111,7 +111,7 @@ Here's a useful dplyr cheatsheet: https://github.com/rstudio/cheatsheets/blob/ma
 # 1. Solution
 
 b2_elision <- b2_clean %>%
-  select(grade, elision_raw, age_year, pid)
+  select(grade, pid, age, elision_raw)
 
 ```
 
