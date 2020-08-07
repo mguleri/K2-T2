@@ -169,6 +169,10 @@ kable(b2_clean_descr,
   # more formatting, from the kableExtra package
   kable_styling(latex_options = c("striped", "scale_down", "hold_position")) 
 
+
+# Click the "Knit" button to render the file and view the table of
+# descriptive statistics
+
 ```
 
 \newpage
