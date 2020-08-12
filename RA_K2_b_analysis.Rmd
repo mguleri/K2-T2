@@ -5,7 +5,7 @@ date: "7/31/2020"
 output: pdf_document
 ---
 
-Text in these white spaces will appear in your markdown doc as text.
+Text in these white spaces will appear in your rendered file as text.
 <!--But this text won't appear!-->
 
 # This creates a heading
@@ -105,7 +105,8 @@ b2_clean <- b2_data %>%
 # Extra Practice: Manipulating dataframes with dplyr verbs 
 Here's a useful dplyr cheatsheet: https://github.com/rstudio/cheatsheets/blob/master/data-transformation.pdf
 
-1\. Create a new data frame with just the participant id, age, grade, and CTOPP Elision data. Try reordering the columns, like putting grade ahead of everything else.
+### Exercise 1
+Create a new data frame with just the participant id, age, grade, and CTOPP Elision data. Try reordering the columns, like putting grade ahead of everything else.
 
 ```{r dplyr extra practice #1}
 # 1. Solution
@@ -113,11 +114,14 @@ Here's a useful dplyr cheatsheet: https://github.com/rstudio/cheatsheets/blob/ma
 b2_elision <- b2_clean %>%
   select(grade, pid, age, elision_raw)
 
+b2_elision
 ```
 
-2a\. Create a new data frame with just 2nd grade W-J data. (Hint: Use filter()). You should end up with 19 subjects.
+### Exercise 2a
+Create a new data frame with just 2nd grade W-J data. (Hint: Use `filter()`). You should end up with 19 subjects.
 
-2b\. Still working with the same data frame in 2a (Hint: Use piping!), pick out subjects who scored 60 or above. You should end up with 8 subjects.
+### Exercise 2b
+Still working with the same data frame in 2a (Hint: Use piping!), pick out subjects who scored 60 or above. You should end up with 8 subjects.
 
 ```{r dplyr extra practice #2}
 # 2a. Solution
@@ -130,7 +134,8 @@ b2_elision <- b2_clean %>%
 
 ```
 
-3\. Create a new dataframe with 1st and 2nd grade data. (Hint: Use logical operators to get both grade levels)
+### Exercise 3
+Create a new dataframe with 1st and 2nd grade data. (Hint: Use logical operators to get both grade levels)
 
 ```{r dplyr extra practice #3}
 # 3. Solution
@@ -138,9 +143,11 @@ b2_elision <- b2_clean %>%
 
 ```
 
-4a\. The arrange() function orders rows by values of a column or columns (low to high). Create a new dataframe where you arrange the b2_clean data by age (low to high)
+### Exercise 4a
+The `arrange()` function orders rows by values of a column or columns (low to high). Create a new dataframe where you arrange the `b2_clean` data by age (low to high)
 
-4b\. Use drop_na() to drop rows (subjects) that have any NA values in their scores.
+### Exercise 4b
+Use `drop_na()` to drop rows (subjects) that have any NA values in their scores.
 
 ```{r dplyr extra practice #4}
 # 4a. Solution
@@ -177,9 +184,35 @@ kable(b2_clean_descr,
 
 \newpage
 # Visualizations
-```{r ctopp plots, echo=FALSE}
 
-#TO-DO: Angie make structure for plots
+We are using the ggplot2 package (part of the tidyverse) for visualizing the data.
+Learn more about the package here: https://ggplot2.tidyverse.org/
+
+In most cases, you start with `ggplot()`, supply a dataset and aesthetic mapping (with `aes()`), and then add on other layers (`geom_point()` or `geom_histogram()`) and specifications.
+
+```{r ggplot examples, echo=FALSE}
+
+
+
 
 ```
+
+
+## CTOPP Rapid Naming
+
+```{r ctopp color naming plots, echo=FALSE}
+
+
+
+
+
+
+
+
+```
+## CTOPP Elision
+
+## TOWRE
+
+## W-J Letter-Word ID
 
