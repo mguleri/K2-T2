@@ -19,4 +19,4 @@ This is an RA Project focused on exploring data analysis in R. We are using the 
 
 *July 31, 2020* - Basics of manipulating tidy data in R. Created new T2 script and began loading and cleaning the data. 
 
-*August 6, 2020* - Continue with dplyr verbs.
+*August 6, 2020* - Continue with dplyr verbs. Added exercises (solutions added 8/11).
