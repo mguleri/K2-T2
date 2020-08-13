@@ -1,7 +1,7 @@
 ---
-title: "K-2 T2 Behavioral Exploration in R"
+title: "K-2 T2 Behavioral Data (RA Version: Exploration in R)"
 author: "Cha Cha Pillai, Mira Guleri, Angie Wang"
-date: "7/31/2020"
+date: "8/13/2020"
 output: pdf_document
 ---
 
@@ -10,7 +10,7 @@ Text in these white spaces will appear in your rendered file as text.
 
 # This creates a heading
 ## This is a smaller heading
-###### An even smaller heading
+### An even smaller heading!
 
 Click the Knit button to render the file and see what the text looks like.        
 
@@ -39,6 +39,21 @@ library(tidyverse)  # for data wrangling
 
 ```
 
+# Background and Participants
+
+K-2 T2
+
+* Second time point collected remotely via Zoom, May-June 2020 (end of the school year)
+* N = 53 (43 participants returning from T1)
+* Grades: K, 1, 2
+* Ages: 5 to 8
+
+# Data Cleaning
+
+Data file: K2_T2_BehavioralData_20200728.csv
+
+* Selected raw scores for CTOPP, TOWRE, W-J, plus scaled scores for TOWRE.
+* Did not remove any subjects.
 
 ```{r clean data, include=FALSE}
 # Next, we read in the .csv file. We included additional arguments in read_csv():
@@ -180,6 +195,19 @@ kable(b2_clean_descr,
 # Click the "Knit" button to render the file and view the table of
 # descriptive statistics
 
+
+# Calculate means by grade, use for plots later
+b2_clean_means <- b2_clean %>%
+  select(-pid, -age_year) %>% 
+  group_by(grade) %>% 
+  summarise_all("mean", na.rm=TRUE)
+
+# TO-DO: Put means by grade in table for rendered file
+
+b2_clean_means_K <- b2_clean_means %>% filter(grade == "K")
+b2_clean_means_1 <- b2_clean_means %>% filter(grade == "1")
+b2_clean_means_2 <- b2_clean_means %>% filter(grade == "2")
+
 ```
 
 \newpage
@@ -199,15 +227,13 @@ In most cases you will:
 4. Add on a `geom` function (like `geom_point()` or `geom_histogram()`)
 5. Add on other layers and specifications (like editing the names of your axes, color, etc.)
 
-### Examples using CTOPP Elision data
+## Examples using CTOPP Elision data
+
+The Elision raw score is the number of items answered correctly before reaching the ceiling rule (3 in a row incorrect).
 
 Basic scatterplot of elision raw scores:
 
 ```{r ggplot elision example basic, echo=FALSE}
-
-# 0. Pulling out the elision data from b2_clean to use below
-b2_elision <- b2_clean %>%
-  select(grade, pid, age, elision_raw)
 
 # 1. We start with ggplot(). 
 
@@ -220,60 +246,220 @@ b2_elision <- b2_clean %>%
 
 # 4. We add on the function geom_point() to add a layer of points to a plot
 
-ggplot(b2_elision, aes(age, elision_raw)) + 
+ggplot(b2_clean, aes(x = age, 
+                       y = elision_raw)) + 
   geom_point() # scatterplot
 
 # We get a basic scatterplot!
 
 ```
 
+\newpage
 Now, adding on more layers and specifications to enhance our scatterplot:
 
 ```{r ggplot elision example enhanced, echo=FALSE}
 
 # Adding color = grade as an argument in aes() to color-code the points by grade-level
-ggplot(b2_elision, aes(x=age, y=elision_raw, color=grade)) + 
+p_el_1 <- ggplot(b2_clean, aes(x = age, y = elision_raw, color = grade)) + 
   geom_point() +
-  
-  # adjusting x axis
-  scale_x_continuous(breaks = seq(5, 9, by=0.5)) +
-  
-  # adding titles and labels with labs()
-  labs(title = "CTOPP Elision Raw Scores",
+  scale_x_continuous(breaks = seq(5, 9, by=0.5)) + # adjusting x axis
+  labs(title = "CTOPP Elision Raw Scores", # adding titles and labels with labs()
        x = "Age",
-       y = "Elision Raw Score",
+       y = "Raw Score (# correct)",
        caption = "This is my caption.") +
-  
-  # changing overall theme
+  theme_classic() # changing overall theme
+
+p_el_1
+
+```
+
+
+```{r ggplot elision other plots, echo=FALSE, message=FALSE}
+
+# Make a CTOPP Elision Density Plot - plot densities of elision raw data by grade
+p_el_2 <- ggplot(b2_clean, aes(x = elision_raw, fill = grade)) +
+  #geom_histogram(aes(y = ..density..), position = "identity", alpha = 0.3) +
+  #geom_histogram(aes(y = ..density..), color = "black", fill = "white") +
+  geom_density(alpha = 0.3) +
+  geom_vline(data = b2_clean_means, 
+             aes(xintercept = elision_raw, color = grade),
+             linetype = "dashed") +
+  labs(title = "CTOPP Elision Raw Scores",
+       x = "Raw Score (# correct)",
+       y = "Density",
+       caption = "Dotted lines indicate raw score means by grade") +
   theme_classic()
-  
+
+p_el_2
+
+
+# Make a CTOPP Elision Histogram (all scores)
+p_el_3 <- ggplot(b2_clean, aes(x = elision_raw)) +
+  geom_histogram(fill = "lightblue") +
+  labs(title = "CTOPP Elision Raw Scores",
+       x = "Raw Score (# correct)",
+       y = "Count") +
+  theme_classic()
+
+p_el_3
+
+
+# Make a CTOPP Elision Box Plot
+p_el_4 <- ggplot(b2_clean, aes(grade, elision_raw), fill = grade) +
+  geom_boxplot(aes(fill = grade), alpha = 0.3) +
+  geom_dotplot(binaxis = 'y',
+               stackdir = 'center',
+               dotsize = .5,
+               fill = "white") +
+  labs(title = "CTOPP Elision Raw Scores",
+       x = "Grade",
+       y = "Raw Score (# Correct)") +
+  theme_classic()
+
+p_el_4
+
 ```
 
-CTOPP Elision Density Plot
-
-```{r ggplot elision density plot, echo=FALSE}
-
-
-
-
-```
-
-
+\newpage
 ## CTOPP Rapid Naming
+
+### Rapid Color Naming
+
+The Color Naming raw score is the time (in seconds) it takes to name all the colors on the page.
 
 ```{r ctopp color naming plots, echo=FALSE}
 
+# TO-DO: Scatter (Color Raw)
 
 
-
-
-
+# TO-DO: Density (Color Raw)
 
 
 ```
-## CTOPP Elision
 
+### Rapid Letter Naming
+
+The Letter Naming raw score is the time (in seconds) it takes to name all the letters on the page.
+
+```{r ctopp letter naming plots, echo=FALSE}
+
+# TO-DO: Scatter (Letter Raw)
+
+
+# TO-DO: Density (Letter Raw)
+
+
+```
+
+### CTOPP Comparisons
+
+```{r ctopp comparisons, echo=FALSE, message=FALSE, warning=FALSE}
+
+# TO-DO: Scatter (Color vs. Letter)
+
+
+# TO-DO: Scatter (Letter vs. Elision)
+
+
+# TO-DO: Scatter (Color vs. Elision)
+
+  
+```
+
+\newpage
 ## TOWRE
 
+### Sight Word Efficiency (SWE)
+
+The SWE raw score is the number of words read correctly in 45 seconds.
+
+```{r towre-swe plots, echo=FALSE}
+
+# TO-DO: Scatter (Raw Scores)
+
+
+# TO-DO: Density (Raw Scores)
+
+
+```
+
+### Phonemic Decoding Efficiency (PDE)
+
+The PDE raw score is the number of words read correctly in 45 seconds.
+
+```{r towre-pde plots, echo=FALSE}
+
+# TO-DO: Scatter (Raw Scores)
+
+
+# TO-DO: Density (Raw Scores)
+
+
+```
+
+### TOWRE Comparisons
+```{r towre comparisons, echo=FALSE, message=FALSE, warning=FALSE}
+
+# Scatter (SWE vs. PDE Raw)
+
+p_swe_pde <- ggplot(b2_clean, aes(x = swe_raw, y = pde_raw)) + 
+  geom_point(aes(color = grade)) +
+  geom_smooth(method = "lm", se = T, linetype = "dashed", color = "grey") + 
+  labs(title = "TOWRE SWE vs. PDE (raw scores)", 
+       x = "SWE Raw Score (words read correctly)",
+       y = "PDE Raw Score (nonwords read correctly)",
+       caption = paste("r = ", 
+                       round(cor(b2_clean$swe_raw, b2_clean$pde_raw, use="complete.obs"), 2), 
+                       "(excludes 3 subjects with NAs)")) +
+  theme_classic()
+
+p_swe_pde
+
+p_swe_pde2 <- ggplot(b2_clean, aes(x = swe_raw, y = pde_raw, color = grade)) + 
+  geom_point() +
+  geom_smooth(method = "lm", se = F, linetype = "solid") + 
+  labs(title = "TOWRE SWE vs. PDE (raw scores)", 
+       x = "SWE Raw Score (words read correctly)",
+       y = "PDE Raw Score (nonwords read correctly)",
+       caption = paste("r = ", 
+                       round(cor(b2_clean$swe_raw, b2_clean$pde_raw, use="complete.obs"), 2), 
+                       "(excludes 3 subjects with NAs)")) +
+  theme_classic()
+
+p_swe_pde2
+
+```
+
+\newpage
 ## W-J Letter-Word ID
+
+The W-J raw score is the number of items answered correctly before reaching the ceiing row (6 highest items that were administered are incorrect)
+
+```{r w-j plots, echo=FALSE}
+
+# TO-DO: Scatter
+
+
+# TO-DO: Density
+
+
+```
+
+\newpage
+## Correlations
+
+Pasting initial T2 corrplot stuff here for now
+
+TO-DO: T1-T2 correlations
+
+```{r correlations, echo=FALSE}
+
+p_all_corr <- b2_clean %>% 
+  select(-c(pid, grade, age_year, swe_age, swe_grade, pde_age, pde_grade)) %>% 
+  mutate(ctopp_c_raw = ctopp_c_raw * -1,
+         ctopp_l_raw = ctopp_l_raw * -1) %>% 
+  cor(use = "complete.obs") %>% 
+  corrplot(method = "color")
+
+```
 
