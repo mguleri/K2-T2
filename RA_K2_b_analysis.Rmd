@@ -1,5 +1,5 @@
 ---
-title: "K2_b_analysis_RA"
+title: "K-2 T2 Behavioral Exploration in R"
 author: "Cha Cha Pillai, Mira Guleri, Angie Wang"
 date: "7/31/2020"
 output: pdf_document
@@ -185,12 +185,73 @@ kable(b2_clean_descr,
 \newpage
 # Visualizations
 
-We are using the ggplot2 package (part of the tidyverse) for visualizing the data.
-Learn more about the package here: https://ggplot2.tidyverse.org/
+We are using the ggplot2 package (part of the tidyverse) to visualize the data.
 
-In most cases, you start with `ggplot()`, supply a dataset and aesthetic mapping (with `aes()`), and then add on other layers (`geom_point()` or `geom_histogram()`) and specifications.
+* Learn more about the package here: https://ggplot2.tidyverse.org/.
 
-```{r ggplot examples, echo=FALSE}
+* Cheat Sheet: https://github.com/rstudio/cheatsheets/blob/master/data-visualization-2.1.pdf
+
+In most cases you will:
+
+1. Start with `ggplot()`
+2. Supply a dataset in the first argument of `ggplot()`
+3. Supply aesthetic mapping with `aes()`
+4. Add on a `geom` function (like `geom_point()` or `geom_histogram()`)
+5. Add on other layers and specifications (like editing the names of your axes, color, etc.)
+
+### Examples using CTOPP Elision data
+
+Basic scatterplot of elision raw scores:
+
+```{r ggplot elision example basic, echo=FALSE}
+
+# 0. Pulling out the elision data from b2_clean to use below
+b2_elision <- b2_clean %>%
+  select(grade, pid, age, elision_raw)
+
+# 1. We start with ggplot(). 
+
+# 2. We specify the dataset to use in the graph in the first argument
+# of ggplot(), in this case, b2_elision.
+
+# 3. The x and y arguments of aes() specify which variables to map to the 
+# x and y axes. Here, we specify that we want age on the x-axis and elision 
+# raw scores on the y-axis.
+
+# 4. We add on the function geom_point() to add a layer of points to a plot
+
+ggplot(b2_elision, aes(age, elision_raw)) + 
+  geom_point() # scatterplot
+
+# We get a basic scatterplot!
+
+```
+
+Now, adding on more layers and specifications to enhance our scatterplot:
+
+```{r ggplot elision example enhanced, echo=FALSE}
+
+# Adding color = grade as an argument in aes() to color-code the points by grade-level
+ggplot(b2_elision, aes(x=age, y=elision_raw, color=grade)) + 
+  geom_point() +
+  
+  # adjusting x axis
+  scale_x_continuous(breaks = seq(5, 9, by=0.5)) +
+  
+  # adding titles and labels with labs()
+  labs(title = "CTOPP Elision Raw Scores",
+       x = "Age",
+       y = "Elision Raw Score",
+       caption = "This is my caption.") +
+  
+  # changing overall theme
+  theme_classic()
+  
+```
+
+CTOPP Elision Density Plot
+
+```{r ggplot elision density plot, echo=FALSE}
 
 
 
