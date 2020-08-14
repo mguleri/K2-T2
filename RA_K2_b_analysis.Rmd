@@ -124,12 +124,14 @@ Here's a useful dplyr cheatsheet: https://github.com/rstudio/cheatsheets/blob/ma
 Create a new data frame with just the participant id, age, grade, and CTOPP Elision data. Try reordering the columns, like putting grade ahead of everything else.
 
 ```{r dplyr extra practice #1}
+
 # 1. Solution
 
 b2_elision <- b2_clean %>%
   select(grade, pid, age, elision_raw)
 
 b2_elision
+
 ```
 
 ### Exercise 2a
@@ -182,6 +184,8 @@ b2_clean_descr <- b2_clean %>%
   select(- pid, - grade, - age_year) %>% # remove unnecessary columns
   stat.desc() # using stat.desc() from pastecs package
 
+# comment this section out if it's currently throwing an error (this is just
+# formatting stuff for now):
 # put the desc stats in a nice table in our rendered file
 kable(b2_clean_descr, 
       digits = 3, # round to 3 digits
@@ -246,8 +250,7 @@ Basic scatterplot of elision raw scores:
 
 # 4. We add on the function geom_point() to add a layer of points to a plot
 
-ggplot(b2_clean, aes(x = age, 
-                       y = elision_raw)) + 
+ggplot(b2_clean, aes(x = age, y = elision_raw)) + 
   geom_point() # scatterplot
 
 # We get a basic scatterplot!
@@ -255,7 +258,7 @@ ggplot(b2_clean, aes(x = age,
 ```
 
 \newpage
-Now, adding on more layers and specifications to enhance our scatterplot:
+To enhance our scatterplot, we add on more layers and specifications:
 
 ```{r ggplot elision example enhanced, echo=FALSE}
 
@@ -277,6 +280,7 @@ p_el_1
 ```{r ggplot elision other plots, echo=FALSE, message=FALSE}
 
 # Make a CTOPP Elision Density Plot - plot densities of elision raw data by grade
+
 p_el_2 <- ggplot(b2_clean, aes(x = elision_raw, fill = grade)) +
   #geom_histogram(aes(y = ..density..), position = "identity", alpha = 0.3) +
   #geom_histogram(aes(y = ..density..), color = "black", fill = "white") +
@@ -293,7 +297,8 @@ p_el_2 <- ggplot(b2_clean, aes(x = elision_raw, fill = grade)) +
 p_el_2
 
 
-# Make a CTOPP Elision Histogram (all scores)
+# Make a CTOPP Elision Histogram (of all scores)
+
 p_el_3 <- ggplot(b2_clean, aes(x = elision_raw)) +
   geom_histogram(fill = "lightblue") +
   labs(title = "CTOPP Elision Raw Scores",
@@ -304,7 +309,8 @@ p_el_3 <- ggplot(b2_clean, aes(x = elision_raw)) +
 p_el_3
 
 
-# Make a CTOPP Elision Box Plot
+# Make a CTOPP Elision Box Plot - by grade
+
 p_el_4 <- ggplot(b2_clean, aes(grade, elision_raw), fill = grade) +
   geom_boxplot(aes(fill = grade), alpha = 0.3) +
   geom_dotplot(binaxis = 'y',
@@ -329,10 +335,12 @@ The Color Naming raw score is the time (in seconds) it takes to name all the col
 
 ```{r ctopp color naming plots, echo=FALSE}
 
-# TO-DO: Scatter (Color Raw)
+# Cha Cha
+
+# TO-DO: Scatter (x = Age and y = Color Raw)
 
 
-# TO-DO: Density (Color Raw)
+# TO-DO: Density (Color Raw Scores)
 
 
 ```
@@ -343,10 +351,12 @@ The Letter Naming raw score is the time (in seconds) it takes to name all the le
 
 ```{r ctopp letter naming plots, echo=FALSE}
 
-# TO-DO: Scatter (Letter Raw)
+# Mira
+
+# TO-DO: Scatter (x = Age and y = Letter Raw)
 
 
-# TO-DO: Density (Letter Raw)
+# TO-DO: Density (Letter Raw Scores)
 
 
 ```
@@ -355,13 +365,13 @@ The Letter Naming raw score is the time (in seconds) it takes to name all the le
 
 ```{r ctopp comparisons, echo=FALSE, message=FALSE, warning=FALSE}
 
-# TO-DO: Scatter (Color vs. Letter)
+# TO-DO: Scatter (Color and Letter)
 
 
-# TO-DO: Scatter (Letter vs. Elision)
+# TO-DO: Scatter (Letter and Elision)
 
 
-# TO-DO: Scatter (Color vs. Elision)
+# TO-DO: Scatter (Color and Elision)
 
   
 ```
@@ -375,7 +385,9 @@ The SWE raw score is the number of words read correctly in 45 seconds.
 
 ```{r towre-swe plots, echo=FALSE}
 
-# TO-DO: Scatter (Raw Scores)
+# Cha Cha
+
+# TO-DO: Scatter (x = Age and y = Raw Scores)
 
 
 # TO-DO: Density (Raw Scores)
@@ -389,7 +401,9 @@ The PDE raw score is the number of words read correctly in 45 seconds.
 
 ```{r towre-pde plots, echo=FALSE}
 
-# TO-DO: Scatter (Raw Scores)
+# Mira
+
+# TO-DO: Scatter (x = Age and y = Raw Scores)
 
 
 # TO-DO: Density (Raw Scores)
@@ -400,12 +414,12 @@ The PDE raw score is the number of words read correctly in 45 seconds.
 ### TOWRE Comparisons
 ```{r towre comparisons, echo=FALSE, message=FALSE, warning=FALSE}
 
-# Scatter (SWE vs. PDE Raw)
+# Scatter (SWE and PDE Raw)
 
 p_swe_pde <- ggplot(b2_clean, aes(x = swe_raw, y = pde_raw)) + 
   geom_point(aes(color = grade)) +
   geom_smooth(method = "lm", se = T, linetype = "dashed", color = "grey") + 
-  labs(title = "TOWRE SWE vs. PDE (raw scores)", 
+  labs(title = "TOWRE SWE and PDE (raw scores)", 
        x = "SWE Raw Score (words read correctly)",
        y = "PDE Raw Score (nonwords read correctly)",
        caption = paste("r = ", 
@@ -418,7 +432,7 @@ p_swe_pde
 p_swe_pde2 <- ggplot(b2_clean, aes(x = swe_raw, y = pde_raw, color = grade)) + 
   geom_point() +
   geom_smooth(method = "lm", se = F, linetype = "solid") + 
-  labs(title = "TOWRE SWE vs. PDE (raw scores)", 
+  labs(title = "TOWRE SWE and PDE (raw scores)", 
        x = "SWE Raw Score (words read correctly)",
        y = "PDE Raw Score (nonwords read correctly)",
        caption = paste("r = ", 
@@ -433,11 +447,11 @@ p_swe_pde2
 \newpage
 ## W-J Letter-Word ID
 
-The W-J raw score is the number of items answered correctly before reaching the ceiing row (6 highest items that were administered are incorrect)
+The W-J raw score is the number of items answered correctly before reaching the ceiling rule (6 highest items that were administered are incorrect)
 
 ```{r w-j plots, echo=FALSE}
 
-# TO-DO: Scatter
+# TO-DO: Scatter (x = Age, y = Raw Score)
 
 
 # TO-DO: Density
