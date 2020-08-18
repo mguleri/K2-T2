@@ -354,10 +354,30 @@ The Letter Naming raw score is the time (in seconds) it takes to name all the le
 # Mira
 
 # TO-DO: Scatter (x = Age and y = Letter Raw)
-
+agelet_scat <- ggplot(b2_clean, aes(x = age, y = ctopp_l_raw)) + 
+  geom_point(aes(color = age)) +
+  geom_smooth(method = "lm", se = T, linetype = "dashed", color = "grey") + 
+  labs(title = "Age and Letter Score (Raw)", 
+       x = "Age (in years)",
+       y = "Letter Raw (# read correctly)",
+       caption = paste("r = ", 
+                       round(cor(b2_clean$swe_raw, b2_clean$pde_raw, use="complete.obs"), 2), 
+                       "(excludes 3 subjects with NAs)")) +
+  theme_classic()
+  agelet_scat
 
 # TO-DO: Density (Letter Raw Scores)
-
+let_den <- ggplot(b2_clean, aes(x = ctopp_l_raw, fill = grade)) +
+  geom_density(alpha = 0.3) +
+  geom_vline(data = b2_clean_means, 
+             aes(xintercept = ctopp_l_raw, color = grade),
+             linetype = "dashed") +
+  labs(title = "CTOPP-2 (Rapid Letter Naming) Raw Scores",
+       x = "Raw Score (# correct)",
+       y = "Density",
+       caption = "Dotted lines indicate raw score means by grade") +
+  theme_classic()
+let_den
 
 ```
 
@@ -405,6 +425,16 @@ The PDE raw score is the number of words read correctly in 45 seconds.
 
 # TO-DO: Scatter (x = Age and y = Raw Scores)
 
+agepde_scat <- ggplot(b2_clean, aes(x = age, y = pde_raw)) + 
+  geom_point(aes(color = age)) +
+  geom_smooth(method = "lm", se = T, linetype = "dashed", color = "grey") + 
+  labs(title = "Age and Raw Letter Score", 
+       x = "Age (in years)",
+       y = "Letter Raw Score (letters read correctly)",
+       caption = paste("r = ", 
+                       round(cor(b2_clean$swe_raw, b2_clean$pde_raw, use="complete.obs"), 2), 
+                       "(excludes 3 subjects with NAs)")) +
+  theme_classic()
 
 # TO-DO: Density (Raw Scores)
 
